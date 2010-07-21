@@ -38,6 +38,354 @@ config VIDEOMODE_HELPERS
 config HDMI
 	bool
 
+config FB_SH_MOBILE_LCDC
+	tristate "SuperH Mobile LCDC framebuffer support"
+	depends on FB && (SUPERH || ARCH_SHMOBILE) && HAVE_CLK
+	select FB_SYS_FILLRECT
+	select FB_SYS_COPYAREA
+	select FB_SYS_IMAGEBLIT
+	select FB_SYS_FOPS
+	select FB_DEFERRED_IO
+	select SH_MIPI_DSI if SH_LCD_MIPI_DSI
+	---help---
+	  Frame buffer driver for the on-chip SH-Mobile LCD controller.
+
+config FB_SH_MOBILE_HDMI
+	tristate "SuperH Mobile HDMI controller support"
+	depends on FB_SH_MOBILE_LCDC
+	select FB_MODE_HELPERS
+	---help---
+	  Driver for the on-chip SH-Mobile HDMI controller.
+
+config FB_TMIO
+	tristate "Toshiba Mobile IO FrameBuffer support"
+	depends on FB && MFD_CORE
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
+	---help---
+	  Frame buffer driver for the Toshiba Mobile IO integrated as found
+	  on the Sharp SL-6000 series
+
+	  This driver is also available as a module ( = code which can be
+	  inserted and removed from the running kernel whenever you want). The
+	  module will be called tmiofb. If you want to compile it as a module,
+	  say M here and read <file:Documentation/kbuild/modules.txt>.
+
+	  If unsure, say N.
+
+config FB_TMIO_ACCELL
+	bool "tmiofb acceleration"
+	depends on FB_TMIO
+	default y
+
+config FB_S3C
+	tristate "Samsung S3C framebuffer support"
+	depends on FB && ARCH_S3C64XX
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
+	---help---
+	  Frame buffer driver for the built-in FB controller in the Samsung
+	  SoC line from the S3C2443 onwards, including the S3C2416, S3C2450,
+	  and the S3C64XX series such as the S3C6400 and S3C6410.
+
+	  These chips all have the same basic framebuffer design with the
+	  actual capabilities depending on the chip. For instance the S3C6400
+	  and S3C6410 support 4 hardware windows whereas the S3C24XX series
+	  currently only have two.
+
+	  Currently the support is only for the S3C6400 and S3C6410 SoCs.
+
+config FB_S3C_DEBUG_REGWRITE
+       bool "Debug register writes"
+       depends on FB_S3C
+       ---help---
+         Show all register writes via printk(KERN_DEBUG)
+
+config FB_S3C2410
+	tristate "S3C2410 LCD framebuffer support"
+	depends on FB && ARCH_S3C2410
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
+	---help---
+	  Frame buffer driver for the built-in LCD controller in the Samsung
+	  S3C2410 processor.
+
+	  This driver is also available as a module ( = code which can be
+	  inserted and removed from the running kernel whenever you want). The
+	  module will be called s3c2410fb. If you want to compile it as a module,
+	  say M here and read <file:Documentation/kbuild/modules.txt>.
+
+	  If unsure, say N.
+config FB_S3C2410_DEBUG
+	bool "S3C2410 lcd debug messages"
+	depends on FB_S3C2410
+	help
+	  Turn on debugging messages. Note that you can set/unset at run time
+	  through sysfs
+
+config FB_NUC900
+        bool "NUC900 LCD framebuffer support"
+        depends on FB && ARCH_W90X900
+        select FB_CFB_FILLRECT
+        select FB_CFB_COPYAREA
+        select FB_CFB_IMAGEBLIT
+        ---help---
+          Frame buffer driver for the built-in LCD controller in the Nuvoton
+          NUC900 processor
+
+config GPM1040A0_320X240
+        bool "Giantplus Technology GPM1040A0 320x240 Color TFT LCD"
+        depends on FB_NUC900
+
+config FB_NUC900_DEBUG
+        bool "NUC900 lcd debug messages"
+        depends on FB_NUC900
+        help
+          Turn on debugging messages. Note that you can set/unset at run time
+          through sysfs
+
+config FB_SM501
+	tristate "Silicon Motion SM501 framebuffer support"
+	depends on FB && MFD_SM501
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
+	---help---
+	  Frame buffer driver for the CRT and LCD controllers in the Silicon
+	  Motion SM501.
+
+	  This driver is also available as a module ( = code which can be
+	  inserted and removed from the running kernel whenever you want). The
+	  module will be called sm501fb. If you want to compile it as a module,
+	  say M here and read <file:Documentation/kbuild/modules.txt>.
+
+	  If unsure, say N.
+
+
+config FB_PNX4008_DUM
+	tristate "Display Update Module support on Philips PNX4008 board"
+	depends on FB && ARCH_PNX4008
+	---help---
+	  Say Y here to enable support for PNX4008 Display Update Module (DUM)
+
+config FB_PNX4008_DUM_RGB
+	tristate "RGB Framebuffer support on Philips PNX4008 board"
+	depends on FB_PNX4008_DUM
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
+	---help---
+	  Say Y here to enable support for PNX4008 RGB Framebuffer
+
+config FB_IBM_GXT4500
+	tristate "Framebuffer support for IBM GXT4500P adaptor"
+	depends on FB && PPC
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
+	---help---
+	  Say Y here to enable support for the IBM GXT4500P display
+	  adaptor, found on some IBM System P (pSeries) machines.
+
+config FB_PS3
+	tristate "PS3 GPU framebuffer driver"
+	depends on FB && PS3_PS3AV
+	select FB_SYS_FILLRECT
+	select FB_SYS_COPYAREA
+	select FB_SYS_IMAGEBLIT
+	select FB_SYS_FOPS
+	select VT_HW_CONSOLE_BINDING if FRAMEBUFFER_CONSOLE
+	---help---
+	  Include support for the virtual frame buffer in the PS3 platform.
+
+config FB_PS3_DEFAULT_SIZE_M
+	int "PS3 default frame buffer size (in MiB)"
+	depends on FB_PS3
+	default 9
+	---help---
+	  This is the default size (in MiB) of the virtual frame buffer in
+	  the PS3.
+	  The default value can be overridden on the kernel command line
+	  using the "ps3fb" option (e.g. "ps3fb=9M");
+
+config FB_XILINX
+	tristate "Xilinx frame buffer support"
+	depends on FB && (XILINX_VIRTEX || MICROBLAZE)
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
+	---help---
+	  Include support for the Xilinx ML300/ML403 reference design
+	  framebuffer. ML300 carries a 640*480 LCD display on the board,
+	  ML403 uses a standard DB15 VGA connector.
+
+config FB_COBALT
+	tristate "Cobalt server LCD frame buffer support"
+	depends on FB && MIPS_COBALT
+
+config FB_SH7760
+	bool "SH7760/SH7763/SH7720/SH7721 LCDC support"
+	depends on FB && (CPU_SUBTYPE_SH7760 || CPU_SUBTYPE_SH7763 \
+		|| CPU_SUBTYPE_SH7720 || CPU_SUBTYPE_SH7721)
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
+	---help---
+	  Support for the SH7760/SH7763/SH7720/SH7721 integrated
+	  (D)STN/TFT LCD Controller.
+	  Supports display resolutions up to 1024x1024 pixel, grayscale and
+	  color operation, with depths ranging from 1 bpp to 8 bpp monochrome
+	  and 8, 15 or 16 bpp color; 90 degrees clockwise display rotation for
+	  panels <= 320 pixel horizontal resolution.
+
+config FB_DA8XX
+	tristate "DA8xx/OMAP-L1xx Framebuffer support"
+	depends on FB && ARCH_DAVINCI_DA8XX
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
+	---help---
+	  This is the frame buffer device driver for the TI LCD controller
+	  found on DA8xx/OMAP-L1xx SoCs.
+	  If unsure, say N.
+
+config FB_VIRTUAL
+	tristate "Virtual Frame Buffer support (ONLY FOR TESTING!)"
+	depends on FB
+	select FB_SYS_FILLRECT
+	select FB_SYS_COPYAREA
+	select FB_SYS_IMAGEBLIT
+	select FB_SYS_FOPS
+	---help---
+	  This is a `virtual' frame buffer device. It operates on a chunk of
+	  unswappable kernel memory instead of on the memory of a graphics
+	  board. This means you cannot see any output sent to this frame
+	  buffer device, while it does consume precious memory. The main use
+	  of this frame buffer device is testing and debugging the frame
+	  buffer subsystem. Do NOT enable it for normal systems! To protect
+	  the innocent, it has to be enabled explicitly at boot time using the
+	  kernel option `video=vfb:'.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called vfb. In order to load it, you must use
+	  the vfb_enable=1 option.
+
+	  If unsure, say N.
+
+config XEN_FBDEV_FRONTEND
+	tristate "Xen virtual frame buffer support"
+	depends on FB && XEN
+	select FB_SYS_FILLRECT
+	select FB_SYS_COPYAREA
+	select FB_SYS_IMAGEBLIT
+	select FB_SYS_FOPS
+	select FB_DEFERRED_IO
+	select XEN_XENBUS_FRONTEND
+	default y
+	help
+	  This driver implements the front-end of the Xen virtual
+	  frame buffer driver.  It communicates with a back-end
+	  in another domain.
+
+config FB_METRONOME
+	tristate "E-Ink Metronome/8track controller support"
+	depends on FB
+	select FB_SYS_FILLRECT
+	select FB_SYS_COPYAREA
+	select FB_SYS_IMAGEBLIT
+	select FB_SYS_FOPS
+	select FB_DEFERRED_IO
+	help
+	  This driver implements support for the E-Ink Metronome
+	  controller. The pre-release name for this device was 8track
+	  and could also have been called by some vendors as PVI-nnnn.
+
+config FB_MB862XX
+	tristate "Fujitsu MB862xx GDC support"
+	depends on FB
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
+	---help---
+	  Frame buffer driver for Fujitsu Carmine/Coral-P(A)/Lime controllers.
+
+config FB_MB862XX_PCI_GDC
+	bool "Carmine/Coral-P(A) GDC"
+	depends on PCI && FB_MB862XX
+	---help---
+	  This enables framebuffer support for Fujitsu Carmine/Coral-P(A)
+	  PCI graphics controller devices.
+
+config FB_MB862XX_LIME
+	bool "Lime GDC"
+	depends on FB_MB862XX
+	depends on OF && !FB_MB862XX_PCI_GDC
+	depends on PPC
+	select FB_FOREIGN_ENDIAN
+	select FB_LITTLE_ENDIAN
+	---help---
+	  Framebuffer support for Fujitsu Lime GDC on host CPU bus.
+
+config FB_EP93XX
+	tristate "EP93XX frame buffer support"
+	depends on FB && ARCH_EP93XX
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
+	---help---
+	  Framebuffer driver for the Cirrus Logic EP93XX series of processors.
+	  This driver is also available as a module. The module will be called
+	  ep93xx-fb.
+
+config FB_PRE_INIT_FB
+	bool "Don't reinitialize, use bootloader's GDC/Display configuration"
+	depends on FB && FB_MB862XX_LIME
+	---help---
+	  Select this option if display contents should be inherited as set by
+	  the bootloader.
+
+config FB_MSM
+	tristate "MSM Framebuffer support"
+	depends on FB && ARCH_MSM
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
+
+config FB_MX3
+	tristate "MX3 Framebuffer support"
+	depends on FB && MX3_IPU
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
+	default y
+	help
+	  This is a framebuffer device for the i.MX31 LCD Controller. So
+	  far only synchronous displays are supported. If you plan to use
+	  an LCD display with your i.MX31 system, say Y here.
+
+config FB_BROADSHEET
+	tristate "E-Ink Broadsheet/Epson S1D13521 controller support"
+	depends on FB
+	select FB_SYS_FILLRECT
+	select FB_SYS_COPYAREA
+	select FB_SYS_IMAGEBLIT
+	select FB_SYS_FOPS
+	select FB_DEFERRED_IO
+	help
+	  This driver implements support for the E-Ink Broadsheet
+	  controller. The release name for this device was Epson S1D13521
+	  and could also have been called by other names when coupled with
+	  a bridge adapter.
+
+source "drivers/video/omap/Kconfig"
+source "drivers/video/omap2/Kconfig"
+
+source "drivers/video/backlight/Kconfig"
+source "drivers/video/display/Kconfig"
+
 if VT
 	source "drivers/video/console/Kconfig"
 endif
